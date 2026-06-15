@@ -5,10 +5,10 @@
 **Autor:** Aitor Santamaria Zuluaga.\
 Grado en Ingeniería en Organización Industrial. Universidad Internacional de la Rioja (UNIR).\
 Curso 2025-2026.\
-Licencia: Proyecto desarrollado con fines académicos como Trabajo Fin de Grado.\
+Licencia: Proyecto desarrollado con fines académicos como Trabajo Fin de Grado.
 
 Descripción
-Este proyecto ha sido desarrollado como Trabajo Fin de Grado del Grado en Ingeniería en Organización Industrial. El objetivo principal es automatizar y optimizar dos de los problemas organizativos más complejos de un centro educativo: la asignación de profesorado a materias y grupos y la generación automática de horarios escolares.
+Este proyecto ha sido desarrollado como Trabajo Fin de Grado del Grado en Ingeniería en Organización Industrial. El objetivo principal es automatizar y optimizar dos de los problemas organizativos más complejos de un centro educativo: la asignación de profesorado a materias y grupos y la generación automática de horarios escolares.\
 Para ello se ha diseñado una herramienta completa en Python capaz de leer la estructura académica de un centro educativo desde hojas Excel, asignar docentes teniendo en cuenta afinidades y restricciones, y generar horarios válidos mediante técnicas de optimización basadas en programación por restricciones. El sistema ha sido desarrollado pensando en centros de Educación Secundaria Obligatoria y Bachillerato, aunque su estructura permite adaptaciones a otros contextos educativos.
 
 **Funcionalidades principales**
