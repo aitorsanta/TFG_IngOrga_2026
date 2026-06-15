@@ -1,4 +1,4 @@
-# TFG_IngOrga_2026
+# TFG Ingeniería en Organización Industrial 2026 · AITOR
 
 **Datos de la aplicación:**
 **Título:** Optimización y generación automática de horarios escolares mediante programación por restricciones: implementación de una aplicación en Python.\
