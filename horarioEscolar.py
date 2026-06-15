@@ -2,7 +2,8 @@
 # AUTORÍA DEL CÓDIGO
 # Autor: Aitor Santamaria Zuluaga
 # Grado en Ingeniería en Organización Industrial
-# JULIO DEL 2026
+# Universidad Internacional de La Rioja (UNIR)
+# JULIO DEL 2026 · Trabajo Fin de Grado (TFG)
 # ============================================================
 
 # ============================================================
