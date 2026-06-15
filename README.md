@@ -1,11 +1,11 @@
 # TFG_IngOrga_2026
 
 **Datos de la aplicación:**
-**Título:** Optimización y generación automática de horarios escolares mediante programación por restricciones: implementación de una aplicación en Python.
-**Autor:** Aitor Santamaria Zuluaga
-Grado en Ingeniería en Organización Industrial. Universidad Internacional de la Rioja (UNIR)
-Curso 2025-2026
-Licencia: Proyecto desarrollado con fines académicos como Trabajo Fin de Grado.
+**Título:** Optimización y generación automática de horarios escolares mediante programación por restricciones: implementación de una aplicación en Python.\
+**Autor:** Aitor Santamaria Zuluaga.\
+Grado en Ingeniería en Organización Industrial. Universidad Internacional de la Rioja (UNIR).\
+Curso 2025-2026.\
+Licencia: Proyecto desarrollado con fines académicos como Trabajo Fin de Grado.\
 
 Descripción
 Este proyecto ha sido desarrollado como Trabajo Fin de Grado del Grado en Ingeniería en Organización Industrial. El objetivo principal es automatizar y optimizar dos de los problemas organizativos más complejos de un centro educativo: la asignación de profesorado a materias y grupos y la generación automática de horarios escolares.
