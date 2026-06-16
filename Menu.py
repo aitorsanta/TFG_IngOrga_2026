@@ -8,6 +8,9 @@
 
 import Asignacion
 import horarioEscolar as Horarios
+import time
+
+
 
 def menu_principal():
     # Asegura que el archivo base existe al arrancar
@@ -91,13 +94,16 @@ def menu_principal():
                 print("[!] No hay datos suficientes para generar afinidades.")
 
         elif opcion == "4":
+            inicio = time.perf_counter()
             print("\n" + "*"*40)
             print("  INICIANDO MOTOR DE OPTIMIZACIÓN CP-SAT")
             print("*"*40)
             # El motor leerá directamente de datos_centro y asignacion_completa
             Horarios.generar_horarios()
+            fin = time.perf_counter()
+            print(f"\nTiempo total de ejecución: {fin - inicio:.2f} segundos")
             input("\nPresiona Intro para continuar...")
-
+            
         elif opcion == "5":
             print("Cerrando el sistema.")
             break
