@@ -14,6 +14,13 @@ import pandas as pd
 from ortools.sat.python import cp_model
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment, Font, Border, Side, PatternFill
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.pdfbase.pdfmetrics import stringWidth
+from openpyxl import load_workbook
 
 
 # ============================================================
@@ -2207,8 +2214,9 @@ def generar_horarios():
                 va,
                 x,
                 profesores_posibles_por_fila,
-                df_total
+                df_total,
             )
+            exportar_horarios_grupos_pdf()
 
         else:
             print("[!] Sin solución viable.")
@@ -2220,3 +2228,156 @@ def generar_horarios():
 
     except Exception as e:
         print(f"Error crítico: {e}")
+
+
+#=================================
+# EXPORTAR PDF CON HORARIOS
+#=================================
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from openpyxl import load_workbook
+
+
+def exportar_horarios_grupos_pdf(
+    archivo_excel=ARCHIVO_SALIDA,
+    archivo_pdf="Horarios_Grupos.pdf",
+    num_grupos=12
+):
+    wb = load_workbook(archivo_excel, data_only=True)
+
+    hojas_excluidas = {
+        "Tutores",
+        "Profesores-Grupos",
+        "Carga_profesor",
+        "Resumen",
+        "Aulas",
+        "Profesores"
+    }
+
+    hojas_grupos = [
+        h for h in wb.sheetnames
+        if h not in hojas_excluidas
+    ][:num_grupos]
+
+    doc = SimpleDocTemplate(
+        archivo_pdf,
+        pagesize=A4,
+        rightMargin=12,
+        leftMargin=12,
+        topMargin=18,
+        bottomMargin=12
+    )
+
+    estilos = getSampleStyleSheet()
+
+    estilo_titulo = ParagraphStyle(
+        "TituloGrupo",
+        parent=estilos["Title"],
+        alignment=TA_CENTER,
+        fontSize=14,
+        leading=16,
+        spaceAfter=6
+    )
+
+    estilo_celda = ParagraphStyle(
+        "CeldaHorario",
+        parent=estilos["BodyText"],
+        alignment=TA_CENTER,
+        fontSize=5.2,
+        leading=6.0
+    )
+
+    estilo_cabecera = ParagraphStyle(
+        "CabeceraHorario",
+        parent=estilos["BodyText"],
+        alignment=TA_CENTER,
+        fontSize=6.2,
+        leading=7,
+        textColor=colors.white
+    )
+
+    elementos = []
+
+    for indice, nombre_hoja in enumerate(hojas_grupos):
+        ws = wb[nombre_hoja]
+
+        datos = []
+
+        # Solo filas 1 a 9: cabecera + sesiones.
+        # Solo columnas A:F: Hora + Lunes a Viernes.
+        for fila in ws.iter_rows(
+            min_row=1,
+            max_row=9,
+            min_col=1,
+            max_col=6,
+            values_only=True
+        ):
+            fila_limpia = []
+
+            for valor in fila:
+                if valor is None:
+                    texto = ""
+                else:
+                    texto = str(valor)
+
+                texto = texto.replace("\n", "<br/>")
+                fila_limpia.append(texto)
+
+            datos.append(fila_limpia)
+
+        elementos.append(Paragraph(f"HORARIO DEL GRUPO {nombre_hoja}", estilo_titulo))
+        elementos.append(Spacer(1, 4))
+
+        tabla_pdf = []
+
+        for i, fila in enumerate(datos):
+            nueva_fila = []
+
+            for celda in fila:
+                if i == 0:
+                    nueva_fila.append(Paragraph(celda, estilo_cabecera))
+                else:
+                    nueva_fila.append(Paragraph(celda, estilo_celda))
+
+            tabla_pdf.append(nueva_fila)
+
+        ancho_total = A4[0] - 24
+        ancho_hora = 58
+        ancho_dia = (ancho_total - ancho_hora) / 5
+
+        tabla = Table(
+            tabla_pdf,
+            colWidths=[ancho_hora] + [ancho_dia] * 5,
+            rowHeights=[24] + [68] * 8
+        )
+
+        tabla.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#4F81BD")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+
+            ("BACKGROUND", (0, 1), (0, -1), colors.HexColor("#D9EAF7")),
+            ("FONTNAME", (0, 1), (0, -1), "Helvetica-Bold"),
+
+            ("GRID", (0, 0), (-1, -1), 0.35, colors.black),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+
+            ("LEFTPADDING", (0, 0), (-1, -1), 1.5),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 1.5),
+            ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
+        ]))
+
+        elementos.append(tabla)
+
+        if indice < len(hojas_grupos) - 1:
+            elementos.append(PageBreak())
+
+    doc.build(elementos)
+
+    print(f"[OK] Horarios exportados correctamente en {archivo_pdf}")
